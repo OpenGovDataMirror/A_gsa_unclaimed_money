@@ -1,0 +1,10 @@
+.row
+  .large-10.columns
+    %h1
+      Search Results
+.row
+  .large-12.columns
+    - if @has_results
+      = render partial: 'results'
+    - else
+      = render partial: 'no_results'

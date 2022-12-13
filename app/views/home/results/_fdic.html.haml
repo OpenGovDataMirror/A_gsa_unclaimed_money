@@ -1,0 +1,58 @@
+%section#fdic
+  %p.title{ :data => { 'section-title' => true} }
+    -#= link_to "FDIC (#{@fdic_search[:total]})", "#"
+  %div.content{ data: { 'section-content' => true } }
+    %table.large-12{:summary => "FDIC Unclaimed Money Search Results. First row contains column headers, subsequent rows contain claim information"}
+      %thead
+        %tr
+          %th{:scope =>"col"}
+            Reference #
+          %th{:scope =>"col"}
+            Fund Owner Name
+          %th{:scope =>"col"}
+            Institution Name
+          %th{:scope =>"col"}
+            Location
+          %th{:scope =>"col"}
+            Claim #
+          %th{:scope =>"col"}
+            Check Date
+          %th{:scope =>"col"}
+            Check #
+          %th
+      %tbody
+        - @fdic_search[:results].each_with_index do |result, index|
+          %tr{:scope => "row"}
+            %td= result[:reference_number]
+            %td= result[:fund_owner_name]
+            %td= result[:institution_name]
+            %td= "#{result[:city]}, #{result[:state]}"
+            %td= result[:claim_number]
+            %td= result[:check_date]
+            %td= result[:check_number]
+            %td
+              = link_to 'Claim', '#', :class => 'small button underline claimLink', 'data-reveal-id' => "fdic-modal-#{index}"
+              %div.reveal-modal.expand{ id: "fdic-modal-#{index}" }
+                - if flash["fdic-modal-#{index}"] && flash[:success]
+                  %div.alert-box.success #{flash[:success]}
+                = link_to raw('&#215;'), "#", class: "close-reveal-modal"
+                %br
+                - if session[:user] != {}
+                  = button_to 'Save to MyUSA Tasks', add_tasks_path(modal: "fdic-modal-#{index}", task_type: 'fdic', uid: result[:reference_number]), :class => 'button positive radius right'
+                %h2
+                  Start the claim process
+                %ol.lead
+                  %li
+                    #{link_to 'Visit FDIC', 'https://www2.fdic.gov/funds/', target: '_blank', class: 'underline'} to find your claim.
+                  %li
+                    Enter your name to search for your funds.  Write down or print your claim number and reference number. Your reference number should be 
+                    %span.label #{result[:reference_number]}.
+                  %li
+                    Return to the #{link_to 'FDIC Unclaimed Funds website', 'https://www2.fdic.gov/funds/', target: '_blank', class: 'underline'}.
+                  %li
+                    Follow the instructions at the bottom of the page called 
+                    %strong How to claim your funds.
+                  %li
+                    If you have further inquiries, you may contact #{mail_to 'FDICUnclaimed@FDIC.gov', 'FDIC via E-Mail inquiries', class: "underline"} for the status of a claim.
+
+    = render partial: 'home/results/footer'

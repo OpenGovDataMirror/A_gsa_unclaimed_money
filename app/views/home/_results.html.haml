@@ -1,0 +1,22 @@
+%p#skip-target-holder
+  = link_to "skip-target", "#skip-target", class: "skip", id: "skip-target", tabindex: "-1"
+%div#tabs
+  %ul
+    %li.tabLink
+      = link_to "FDIC (#{@fdic_search[:total]})", "#tab1", :class => 'tabLinkText'
+      %span.hiddenText
+        Tab
+    %li.tabLink
+      = link_to "PBGC (#{@pbgc_search[:total]})", "#tab2", :class => 'tabLinkText'
+      %span.hiddenText
+        Tab
+    %li.tabLink
+      = link_to "HUD (#{@hud_search[:total]})", "#tab3", :class => 'tabLinkText'
+      %span.hiddenText
+        Tab
+  %div#tab1
+    = render partial: 'home/results/fdic'
+  %div#tab2
+    = render partial: 'home/results/pbgc'
+  %div#tab3
+    = render partial: 'home/results/hud'
